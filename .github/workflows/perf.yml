@@ -31,9 +31,13 @@ jobs:
         run: ./.github/workflows/perf.sh ${{ github.event.pull_request.head.ref }}
 
       - name: Comment the report on PR
-        uses: thollander/actions-comment-pull-request@v1
-        with:
-          message: |
-            ## Performances Reports
-            $(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        env:
+          URL: ${{ github.event.pull_request.comments_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl \
+            -X POST \
+            $URL \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -d '{ "body": "## Performances Reports \n $(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})" }'
