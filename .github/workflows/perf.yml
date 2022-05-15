@@ -12,6 +12,11 @@ jobs:
     # this job will be trigger only if the label get-perf is
     if: ${{ github.event.label.name == 'get-perf' }}
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+      contents: write
+
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python 3.10
