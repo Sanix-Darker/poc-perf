@@ -41,7 +41,8 @@ jobs:
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            ## Performances Reports
-            Hi, these are some statistics from your changes
+                ## Performances Reports
+                Hi, these are some statistics from your changes
 
-            $(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})
+                $(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})
+          reactions: eyes
