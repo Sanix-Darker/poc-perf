@@ -30,11 +30,5 @@ jobs:
       - name: Run perf on current branch based on pytest
         run: ./.github/workflows/perf.sh ${{ github.event.pull_request.head.ref }}
 
-      - name: Comment report
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            ## Benchmarks report
-            Hi, your package has been built on test.pypi and it's available !
-            $(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})
+      - name: Build the output report
+        run: ./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }}
