@@ -31,8 +31,10 @@ jobs:
         run: ./.github/workflows/perf.sh ${{ github.event.pull_request.head.ref }}
 
       - name: Build the output report
+        uses: mathiasvr/command-output@v1
         id: report
-        run: |
+        with:
+          run: |
             REPORT="$(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})"
             echo "::set-output name=MSG::$REPORT"
 
@@ -41,5 +43,5 @@ jobs:
         with:
           message: |
             ### Perf report
-            ${{ steps.report.outputs.MSG }}
+            ${{ steps.report.outputs.stdout }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
