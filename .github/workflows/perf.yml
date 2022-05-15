@@ -19,25 +19,26 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: SetUp and install everything
-        run: |
-            rm -rf .benchmarks
-            pip install -r requirements.txt
+      # - name: SetUp and install everything
+      #   run: |
+      #       rm -rf .benchmarks
+      #       pip install -r requirements.txt
 
-      - name: Run perf on master based on pytest
-        run: ./.github/workflows/perf.sh master
+      # - name: Run perf on master based on pytest
+      #   run: ./.github/workflows/perf.sh master
 
-      - name: Run perf on current branch based on pytest
-        run: ./.github/workflows/perf.sh ${{ github.event.pull_request.head.ref }}
+      # - name: Run perf on current branch based on pytest
+      #   run: ./.github/workflows/perf.sh ${{ github.event.pull_request.head.ref }}
 
-      - name: Comment the report on PR
-        env:
-          URL: ${{ github.event.pull_request.comments_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          curl \
-            -X POST \
-            $URL \
-            -H "Content-Type: application/json" \
-            -H "Authorization: token $GITHUB_TOKEN" \
-            -d '{ "body": "## Performances Reports \n $(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})" }'
+      # - name: Build the output report
+      #   id: report
+      #   run: |
+      #       REPORT=$(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})
+      #       echo "::set-output name=MSG::$REPORT"
+
+      - name: Comment report
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+              Hello
