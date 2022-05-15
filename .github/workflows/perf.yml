@@ -36,17 +36,10 @@ jobs:
             REPORT=$(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})
             echo "::set-output name=MSG::$REPORT"
 
-      - name: Comment PR
+      - name: Comment the report on PR
         uses: thollander/actions-comment-pull-request@v1
         with:
           message: |
-            Hello world ! :wave:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-
-      - name: Comment report
-        uses: peter-evans/create-or-update-comment@v1
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            Hi, your package has been built on test.pypi and it's available
+            Hi :wave:, these are some statistics from your changes
             ${{ steps.report.outputs.MSG }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
