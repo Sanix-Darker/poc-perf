@@ -44,5 +44,4 @@ jobs:
                 ## Performances Reports
                 Hi, these are some statistics from your changes
 
-                $(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})
           reactions: eyes
