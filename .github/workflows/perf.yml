@@ -36,12 +36,10 @@ jobs:
             ./.github/workflows/perf.sh \
             ${{ github.event.pull_request.head.ref }}
 
-      - name: Comment for performances stats/differences
-        uses: peter-evans/create-or-update-comment@v2
+      - name: Comment for performances stats differences
+        uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-                ## Performances Reports
-                Hi, these are some statistics from your changes
-
+            Hi, your package has been built on test.pypi and it's available
           reactions: eyes
