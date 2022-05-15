@@ -35,13 +35,14 @@ jobs:
         id: report
         with:
           run: |
-            REPORT="$(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})"
-            echo "::set-output name=MSG::$REPORT"
+            ./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }}
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v1
         with:
           message: |
             ### Perf report
+            ```markdown
             ${{ steps.report.outputs.stdout }}
+            ```
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
