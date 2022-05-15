@@ -1,19 +1,19 @@
----
-name: python-perf
+# ---
+# name: python-perf
 
-on:
-  pull_request:
-    types: [labeled]
-    paths:
-      - '**'
+# on:
+#   pull_request:
+#     types: [labeled]
+#     paths:
+#       - '**'
 
-jobs:
-  perfs:
-    # this job will be trigger only if the label get-perf is
-    if: ${{ github.event.label.name == 'get-perf' }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+# jobs:
+#   perfs:
+#     # this job will be trigger only if the label get-perf is
+#     if: ${{ github.event.label.name == 'get-perf' }}
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
       # - name: Set up Python 3.10
       #   uses: actions/setup-python@v2
       #   with:
@@ -36,9 +36,39 @@ jobs:
       #       REPORT=$(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})
       #       echo "::set-output name=MSG::$REPORT"
 
-      - name: Comment report
+      # - name: Comment report
+      #   uses: peter-evans/create-or-update-comment@v1
+      #   with:
+      #     issue-number: ${{ github.event.pull_request.number }}
+      #     body: |
+      #         Hello
+
+name: python-perf
+
+on: 
+  pull_request:
+    types: [ labeled ]
+    paths:
+      - '**'
+
+jobs:
+  publish:
+    defaults:
+      run:
+        working-directory: ./.github/workflows
+
+    if: ${{ github.event.label.name == 'get-perf' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.10"
+
+      - name: Comment for the new package build
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-              Hello
+            Hi, hello there !
