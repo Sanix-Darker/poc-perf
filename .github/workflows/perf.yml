@@ -1,69 +1,45 @@
-# ---
-# name: python-perf
-
-# on:
-#   pull_request:
-#     types: [labeled]
-#     paths:
-#       - '**'
-
-# jobs:
-#   perfs:
-#     # this job will be trigger only if the label get-perf is
-#     if: ${{ github.event.label.name == 'get-perf' }}
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v2
-      # - name: Set up Python 3.10
-      #   uses: actions/setup-python@v2
-      #   with:
-      #     python-version: "3.10"
-
-      # - name: SetUp and install everything
-      #   run: |
-      #       rm -rf .benchmarks
-      #       pip install -r requirements.txt
-
-      # - name: Run perf on master based on pytest
-      #   run: ./.github/workflows/perf.sh master
-
-      # - name: Run perf on current branch based on pytest
-      #   run: ./.github/workflows/perf.sh ${{ github.event.pull_request.head.ref }}
-
-      # - name: Build the output report
-      #   id: report
-      #   run: |
-      #       REPORT=$(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})
-      #       echo "::set-output name=MSG::$REPORT"
-
-      # - name: Comment report
-      #   uses: peter-evans/create-or-update-comment@v1
-      #   with:
-      #     issue-number: ${{ github.event.pull_request.number }}
-      #     body: |
-      #         Hello
-
+---
 name: python-perf
 
-on: 
+on:
   pull_request:
-    types: [ labeled ]
+    types: [labeled]
     paths:
       - '**'
 
 jobs:
-  publish:
-    defaults:
-      run:
-        working-directory: ./.github/workflows
-
+  perfs:
+    # this job will be trigger only if the label get-perf is
     if: ${{ github.event.label.name == 'get-perf' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Comment for the new package build
-        uses: peter-evans/create-or-update-comment@v1
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v2
         with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            Hi, hello there !
+          python-version: "3.10"
+
+      - name: SetUp and install everything
+        run: |
+            rm -rf .benchmarks
+            pip install -r requirements.txt
+
+      - name: Run perf on master based on pytest
+        run: ./.github/workflows/perf.sh master
+
+      - name: Run perf on current branch based on pytest
+        run: ./.github/workflows/perf.sh ${{ github.event.pull_request.head.ref }}
+
+      - name: Build the output report
+        id: report
+        run: |
+            REPORT="$(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})"
+            echo "::set-output name=MSG::$REPORT"
+
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v1
+        with:
+          message: |
+            ### Perf report
+            ${{ steps.report.outputs.MSG }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
