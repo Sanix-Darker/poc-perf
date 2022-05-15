@@ -8,7 +8,7 @@ on:
       - '**'
 
 jobs:
-  publish:
+  perfs:
     # this job will be trigger only if the label get-perf is
     if: ${{ github.event.label.name == 'get-perf' }}
     runs-on: ubuntu-latest
@@ -37,13 +37,11 @@ jobs:
             ${{ github.event.pull_request.head.ref }}
 
       - name: Comment for performances stats/differences
-        uses: peter-evans/create-or-update-comment@v1
+        uses: peter-evans/create-or-update-comment@v2
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
-            ## Reports
+            ## Performances Reports
             Hi, these are some statistics from your changes
-            ### On Master
-            ${{ steps.master_perf.outputs.MSG}}
-            ### On ${{ github.event.pull_request.head.ref }}
-            ${{ steps.current_perf.outputs.MSG}}
+
+            $(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})
