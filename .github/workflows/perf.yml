@@ -30,16 +30,10 @@ jobs:
       - name: Run perf on current branch based on pytest
         run: ./.github/workflows/perf.sh ${{ github.event.pull_request.head.ref }}
 
-      - name: Build the output report
-        id: report
-        run: |
-            REPORT=$(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})
-            echo "::set-output name=MSG::$REPORT"
-
       - name: Comment the report on PR
         uses: thollander/actions-comment-pull-request@v1
         with:
           message: |
-            Hi :wave:, these are some statistics from your changes
-            ${{ steps.report.outputs.MSG }}
+            ## Performances Reports
+            $(./.github/workflows/perf_comment.sh ${{ github.event.pull_request.head.ref }})
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
