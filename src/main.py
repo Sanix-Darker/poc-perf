@@ -77,4 +77,4 @@ def combined(json_dict, method, iteration=10):
 
 def main_func(payload):
     """ --- """
-    return combined(payload, slow_fibonacii, 1)
+    return combined(payload, fast_fibonacii, 1)
